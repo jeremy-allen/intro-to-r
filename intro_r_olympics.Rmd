@@ -1,0 +1,73 @@
+---
+title: "Intro to R: Gender at the Olympics"
+author: "Jeremy Allen"
+date: "8/6/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<br>
+<br>  
+
+# Gender by Sport
+
+```{r data, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+
+# load a package into the session for use
+library(tidyverse)
+library(plotly)
+
+# read a CSV file that is online or on disk
+dat <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-08-03/athletes.csv')
+
+```
+
+```{r cleaning, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+
+# drop a column that has no values
+dat <- dat %>% 
+  select(-guide)
+
+# filter out rows with no athlete names
+dat <- dat %>% 
+  filter(!is.na(athlete))
+
+
+```
+
+```{r bar, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+dat %>%
+  mutate(type = fct_infreq(type)) %>% #reorder levels by freq
+  count(gender, type, sort = TRUE) %>% 
+  ggplot(aes(x = type, y = n, fill = gender)) +
+  geom_bar(stat = "identity") +
+  theme(
+    axis.text.x = element_text(angle = 45, vjust = .45)
+  )
+
+```
+
+# Gender Over Time
+
+```{r line, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+# line graph with default colors, add title
+line_graph <- dat %>% 
+  count(gender, year, sort = TRUE) %>% 
+  ggplot(aes(x = year, y = n, group = gender, color = gender)) +
+  geom_line() +
+  labs(
+    title = "Number of Olympic Athletes by Year",
+    subtitle = "by gender"
+  )
+
+# lets make the last one an interactive javascript-based plot,
+# where the user can hover and hide lines
+plotly::ggplotly(line_graph)
+
+```
+
