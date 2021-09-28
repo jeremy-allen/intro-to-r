@@ -1,0 +1,83 @@
+---
+title: "Intro to R: Penguins - How Do they Work?"
+author: "Jeremy Allen"
+date: "8/6/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<br> <br>
+
+```{r data, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+
+# load a package into the session for use
+library(tidyverse)
+library(plotly)
+library(readr)
+library(palmerpenguins)
+
+# read a CSV file that is online or on disk
+dat <- readr::read_csv('penguins_raw.csv')
+
+```
+
+```{r cleaning, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+
+# drop a column that has no values
+dat <- dat %>% 
+  select(-Comments)
+
+# filter out rows with no sex
+dat <- dat %>% 
+  filter(!is.na(Sex))
+
+
+```
+
+# Species by Island
+
+```{r bar, echo=FALSE, fig.width=12, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+# bar plot
+dat %>%
+  ggplot(aes(x = Island, fill = Species)) +
+  geom_bar() + 
+  labs(
+    title = "Where Do They Live?",
+    subtitle = "by Island",
+    caption = "data from palmerpenguines R package"
+  )
+
+```
+
+<br>
+
+# Understanding Penguin Anatomy
+
+```{r scatter, echo=FALSE, fig.width=10, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+# scatter plot, add titles
+length_mass <- dat %>% 
+  ggplot(aes(x = `Flipper Length (mm)`, y = `Body Mass (g)`, color = Species)) +
+  geom_point(alpha = .4) +
+  labs(
+    title = "Is Flipper Length Associated With Body Mass?",
+    subtitle = "by species",
+    caption = "data from palmerpenguines R package"
+  ) +
+  theme_light()
+
+# lets make the last one an interactive javascript-based plot,
+# where the user can hover and hide lines
+plotly::ggplotly(length_mass)
+
+```
+
+<br> <br>
+
+## References
+
+Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica) penguin data. R package version 0.1.0. <https://allisonhorst.github.io/palmerpenguins/>
