@@ -36,12 +36,13 @@ ggsave("output/species_by_island.png", plot = last_plot())
 # scatter plot, add titles
 length_mass <- dat %>% 
   ggplot(aes(x = `Flipper Length (mm)`, y = `Body Mass (g)`, color = Species)) +
-  geom_point() +
+  geom_point(alpha = .4) +
   labs(
     title = "Is Flipper Length Associated With Body Mass?",
     subtitle = "by species",
     caption = "data from palmerpenguines R package"
-  )
+  ) +
+  theme_light()
 
 # save plot to disk (filename includes path)
 ggsave("output/length_mass_association.png", plot = length_mass)
