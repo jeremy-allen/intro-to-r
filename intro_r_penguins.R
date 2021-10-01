@@ -7,6 +7,10 @@ library(palmerpenguins)
 # read a CSV file that is online or on disk
 dat <- readr::read_csv('penguins_raw.csv')
 
+# shift-cmd-r to make a section break
+
+# clean -------------------------------------------------------------------
+
 # inspect the data
 glimpse(dat)
 skimr::skim(dat)
@@ -21,7 +25,6 @@ dat <- dat %>%
 
 # bar plot
 dat %>%
-  #count(gender, type, sort = TRUE) %>% 
   ggplot(aes(x = Island, fill = Species)) +
   geom_bar() + 
   labs(
