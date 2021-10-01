@@ -23,6 +23,10 @@ dat <- dat %>%
 dat <- dat %>% 
   filter(!is.na(Sex))
 
+
+# visualize ---------------------------------------------------------------
+
+
 # bar plot
 dat %>%
   ggplot(aes(x = Island, fill = Species)) +
@@ -49,6 +53,10 @@ length_mass <- dat %>%
 
 # save plot to disk (filename includes path)
 ggsave("output/length_mass_association.png", plot = length_mass)
+
+
+# interactive -------------------------------------------------------------
+
 
 # lets make the last one an interactive javascript-based plot,
 # where the user can hover and hide items
