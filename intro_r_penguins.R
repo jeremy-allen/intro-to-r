@@ -1,11 +1,15 @@
+# shift-cmd-0 to restart R
+
 # load a package into the session for use
 library(tidyverse)
 library(plotly)
 library(readr)
 library(palmerpenguins)
+library(gtsummary)
 
 # read a CSV file that is online or on disk
 dat <- readr::read_csv('penguins_raw.csv')
+
 
 # shift-cmd-r to make a section break
 
@@ -25,7 +29,6 @@ dat <- dat %>%
 
 
 # visualize ---------------------------------------------------------------
-
 
 # bar plot
 dat %>%
@@ -55,8 +58,15 @@ length_mass <- dat %>%
 ggsave("output/length_mass_association.png", plot = length_mass)
 
 
-# interactive -------------------------------------------------------------
+dat %>%
+  select(Species, `Flipper Length (mm)`, `Body Mass (g)`) %>% 
+  gtsummary::tbl_summary(by = Species) %>% 
+  gtsummary::add_p() %>% 
+  gtsummary::bold_labels()
 
+
+
+# interactive -------------------------------------------------------------
 
 # lets make the last one an interactive javascript-based plot,
 # where the user can hover and hide items
