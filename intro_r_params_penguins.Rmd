@@ -1,11 +1,21 @@
 ---
-title: "Intro to R: Penguins - How Do they Work?"
+title: "Intro to R: Penguins - Tell Me About the Islands"
 author: "Jeremy Allen"
 date: "8/6/2021"
+params:
+  island:
+    label: "Island:"
+    value: Torgersen
+    input: select
+    choices: [Torgersen, Biscoe, Dream]
 output: html_document
 editor_options: 
   chunk_output_type: console
 ---
+
+----
+
+# `r params$island` Island Inspection Report
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -20,6 +30,7 @@ library(tidyverse)
 library(plotly)
 library(readr)
 library(palmerpenguins)
+library(gt)
 library(gtsummary)
 
 # read a CSV file that is online or on disk
@@ -41,17 +52,16 @@ dat <- dat %>%
 
 ```
 
-# Species by Island
+# Species on `r params$island` Island
 
 ```{r bar, echo=FALSE, fig.width=12, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 # bar plot
 dat %>%
+  filter(Island == params$island) %>% 
   ggplot(aes(x = Island, fill = Species)) +
   geom_bar() + 
   labs(
-    title = "Where Do They Live?",
-    subtitle = "by Island",
     caption = "data from palmerpenguines R package"
   )
 
@@ -59,16 +69,17 @@ dat %>%
 
 <br>
 
-# Understanding Penguin Anatomy
+# `r params$island` Island Penguin Anatomy
 
 ```{r scatter, echo=FALSE, fig.width=10, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 # scatter plot, add titles
 length_mass <- dat %>% 
+  filter(Island == params$island) %>% 
   ggplot(aes(x = `Flipper Length (mm)`, y = `Body Mass (g)`, color = Species)) +
   geom_point(alpha = .4) +
   labs(
-    title = "Is Flipper Length Associated With Body Mass?",
+    title = str_c(params$island, " Island - Is Flipper Length Associated With Body Mass?"),
     subtitle = "by species",
     caption = "data from palmerpenguines R package"
   ) +
@@ -82,19 +93,29 @@ plotly::ggplotly(length_mass)
 
 <br>
 
-# Association of body features and species
+# Data Summary
+
+<br>
 
 ```{r table, echo=FALSE, fig.width=10, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 dat %>%
-  select(Sex, `Body Mass (g)`) %>%
-  gtsummary::tbl_summary(by = Sex) %>%
-  gtsummary::add_n() %>%
-  gtsummary::add_p() %>%
-  gtsummary::bold_labels()
+  filter(Island == params$island) %>% 
+  select(Island, Species, Sex, `Body Mass (g)`, `Culmen Length (mm)`, `Flipper Length (mm)`) %>%
+  group_by(Species) %>% 
+  summarise(
+    mean_bm = mean(`Body Mass (g)`, na.rm = TRUE),
+    mean_cl = mean(`Culmen Length (mm)`, na.rm = TRUE),
+    mean_fl = mean(`Flipper Length (mm)`, na.rm = TRUE)
+    ) %>% 
+  gt() %>% 
+  tab_header(
+    title = "Mean Anatomy",
+    subtitle = str_c("By species on ", params$island, " Island")
+  )
 
 ```
-[more about the gtsummary package](http://www.danieldsjoberg.com/gtsummary/)
+[more about the gt package](https://gt.rstudio.com/)
 
 <br> <br>
 
