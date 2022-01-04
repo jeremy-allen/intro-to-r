@@ -1,11 +1,11 @@
 # shift-cmd-0 to restart R
 
-# load a package into the session for use
-# library(tidyverse)
-# library(plotly)
-# library(readr)
-# library(palmerpenguins)
-# library(gtsummary)
+#load a package into the session for use
+library(tidyverse)
+library(plotly)
+library(readr)
+library(palmerpenguins)
+library(gtsummary)
 
 # read a CSV file that is online or on disk
 dat <- readr::read_csv('penguins_raw.csv')
