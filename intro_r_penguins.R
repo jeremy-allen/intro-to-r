@@ -1,6 +1,6 @@
 # shift-cmd-0 to restart R
 
-#load a package into the session for use
+# load a package into the session for use
 library(tidyverse)
 library(plotly)
 library(readr)
