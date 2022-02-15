@@ -15,6 +15,8 @@ editor_options:
 
 ----
 
+datetime: `r Sys.time()`
+
 # `r params$island` Island Inspection Report
 
 ```{r setup, include=FALSE}
