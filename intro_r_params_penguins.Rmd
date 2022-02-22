@@ -17,7 +17,7 @@ editor_options:
 
 datetime: `r Sys.time()`
 
-# `r params$island` Island Inspection Report
+# `r params$island` Island Inspection Report today
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
