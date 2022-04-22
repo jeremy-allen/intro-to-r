@@ -1,11 +1,14 @@
 # shift-cmd-0 to restart R
 
+# You can run code from this script or from the console
+# We will run this code from here inside the script
+
 # load a package into the session for use
 library(tidyverse)
 library(plotly)
-library(readr)
 library(palmerpenguins)
-library(gtsummary)
+library(gt)
+library(lubridate)
 
 # read a CSV file that is online or on disk
 dat <- readr::read_csv('penguins_raw.csv')
@@ -58,11 +61,29 @@ length_mass <- dat %>%
 ggsave("output/length_mass_association.png", plot = length_mass)
 
 
-dat %>%
-  select(Species, `Flipper Length (mm)`, `Body Mass (g)`) %>% 
-  gtsummary::tbl_summary(by = Species) %>% 
-  gtsummary::add_p() %>% 
-  gtsummary::bold_labels()
+# make a table of our data
+# but let's summarize by year, so first make a year column
+dat <- dat %>%
+  dplyr::arrange(`Date Egg`) %>% 
+  mutate(Year = year(`Date Egg`),
+         Year = as.factor(Year))
+
+# table using gt package
+dat %>% 
+  janitor::clean_names() %>% 
+  group_by(species, island, year) %>% # order here will influence table output
+  summarise(across(culmen_length_mm:body_mass_g, mean)) %>%
+  select(species, island, year, everything()) %>% 
+  dplyr::arrange(species, island, year) %>% 
+  gt() %>%
+  tab_header(
+    title = "Penguin Anatomical Changes",
+    subtitle = "By species, island, and year"
+  ) %>%
+  fmt_number(
+    columns = culmen_length_mm:body_mass_g,
+    decimals = 1
+  )
 
 
 

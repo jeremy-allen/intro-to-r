@@ -1,5 +1,5 @@
 ---
-title: "Intro to R: Penguins - Tell Me About the Islands"
+title: "Intro to R: Penguins - Tell Me About the Islands - new title"
 author: "Jeremy Allen"
 date: "8/6/2021"
 params:
@@ -10,14 +10,16 @@ params:
     choices: [Torgersen, Biscoe, Dream]
 output: html_document
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
-----
+------------------------------------------------------------------------
 
 datetime: `r Sys.time()`
 
 # `r params$island` Island Inspection Report today
+
+Changing text here
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -30,10 +32,9 @@ knitr::opts_chunk$set(echo = TRUE)
 # load a package into the session for use
 library(tidyverse)
 library(plotly)
-library(readr)
 library(palmerpenguins)
 library(gt)
-library(gtsummary)
+library(lubridate)
 
 # read a CSV file that is online or on disk
 dat <- readr::read_csv('penguins_raw.csv')
@@ -97,26 +98,37 @@ plotly::ggplotly(length_mass)
 
 # Data Summary
 
-<br>
-
 ```{r table, echo=FALSE, fig.width=10, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-dat %>%
-  filter(Island == params$island) %>% 
-  select(Island, Species, Sex, `Body Mass (g)`, `Culmen Length (mm)`, `Flipper Length (mm)`) %>%
-  group_by(Species) %>% 
-  summarise(
-    mean_bm = mean(`Body Mass (g)`, na.rm = TRUE),
-    mean_cl = mean(`Culmen Length (mm)`, na.rm = TRUE),
-    mean_fl = mean(`Flipper Length (mm)`, na.rm = TRUE)
-    ) %>% 
-  gt() %>% 
+# make a table of our data
+# but let's summarize by year, so first make a year column
+dat <- dat %>%
+  dplyr::arrange(`Date Egg`) %>% 
+  mutate(Year = year(`Date Egg`),
+         Year = as.factor(Year))
+
+# table using gt package
+dat %>% 
+  janitor::clean_names() %>% 
+  filter(island == params$island) %>% 
+  group_by(species, island, year) %>% # order here will influence table output
+  summarise(across(culmen_length_mm:body_mass_g, mean)) %>%
+  select(species, island, year, everything()) %>% 
+  dplyr::arrange(species, island, year) %>% 
+  gt() %>%
   tab_header(
-    title = "Mean Anatomy",
-    subtitle = str_c("By species on ", params$island, " Island")
+    title = "Penguin Anatomical Changes",
+    subtitle = "By species, island, and year"
+  ) %>%
+  fmt_number(
+    columns = culmen_length_mm:body_mass_g,
+    decimals = 1
   )
 
 ```
+
+Interp:
+
 [more about the gt package](https://gt.rstudio.com/)
 
 <br> <br>

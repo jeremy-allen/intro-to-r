@@ -18,9 +18,9 @@ knitr::opts_chunk$set(echo = TRUE)
 # load a package into the session for use
 library(tidyverse)
 library(plotly)
-library(readr)
 library(palmerpenguins)
-library(gtsummary)
+library(gt)
+library(lubridate)
 
 # read a CSV file that is online or on disk
 dat <- readr::read_csv('penguins_raw.csv')
@@ -59,6 +59,13 @@ dat %>%
 
 <br>
 
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='asis'}
+# have a remote analyst write content that you can source into this doc
+cat(read_lines(file = "interpret_islands.txt"))
+```
+
+<br>
+
 # Understanding Penguin Anatomy
 
 ```{r scatter, echo=FALSE, fig.width=10, message=FALSE, warning=FALSE, paged.print=FALSE}
@@ -82,19 +89,38 @@ plotly::ggplotly(length_mass)
 
 <br>
 
-# Association of body features and species
+# Summary Table
+We can see that for Adelie, their culmen length is getting longer on Biscoe Island but shorter on Dream Island.
 
 ```{r table, echo=FALSE, fig.width=10, message=FALSE, warning=FALSE, paged.print=FALSE}
 
-dat %>%
-  select(Sex, `Body Mass (g)`) %>%
-  gtsummary::tbl_summary(by = Sex) %>%
-  gtsummary::add_n() %>%
-  gtsummary::add_p() %>%
-  gtsummary::bold_labels()
+# make a table of our data
+# but let's summarize by year, so first make a year column
+dat <- dat %>%
+  dplyr::arrange(`Date Egg`) %>% 
+  mutate(Year = year(`Date Egg`),
+         Year = as.factor(Year))
+
+# table using gt package
+dat %>% 
+  janitor::clean_names() %>% 
+  group_by(species, island, year) %>% # order here will influence table output
+  summarise(across(culmen_length_mm:body_mass_g, mean)) %>%
+  select(species, island, year, everything()) %>% 
+  dplyr::arrange(species, island, year) %>% 
+  gt() %>%
+  tab_header(
+    title = "Penguin Anatomical Changes",
+    subtitle = "By species, island, and year"
+  ) %>%
+  fmt_number(
+    columns = culmen_length_mm:body_mass_g,
+    decimals = 1
+  )
 
 ```
-[more about the gtsummary package](http://www.danieldsjoberg.com/gtsummary/)
+
+[more about the gt package](https://gt.rstudio.com/index.html)
 
 <br> <br>
 
