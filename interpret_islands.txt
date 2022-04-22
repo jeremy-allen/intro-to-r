@@ -1,0 +1,1 @@
+**Interpretation**: This graph shows how penguion species varies across Islands. Only Adele penguins are found on Torgersen Island. There are no Gentoo penguins on Dream or Torgesen Islands. (This paragraph was actually written in a stand alone text file that was then sourced into an 'asis' r chunk)
