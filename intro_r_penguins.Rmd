@@ -1,7 +1,7 @@
 ---
 title: "Intro to R: Penguins - How Do they Work?"
 author: "Jeremy Allen"
-date: "8/6/2021"
+date: "`r format(Sys.time(), tz='America/New_York', usetz = TRUE)`"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -90,6 +90,7 @@ plotly::ggplotly(length_mass)
 <br>
 
 # Summary Table
+
 We can see that for Adelie, their culmen length is getting longer on Biscoe Island but shorter on Dream Island.
 
 ```{r table, echo=FALSE, fig.width=10, message=FALSE, warning=FALSE, paged.print=FALSE}
