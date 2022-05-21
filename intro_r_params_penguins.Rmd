@@ -1,13 +1,13 @@
 ---
-title: "Intro to R: Penguins - Tell Me About the Islands - new title"
+title: "Intro to R: Penguins - Tell Me About the Islands"
 author: "Jeremy Allen"
-date: "8/6/2021"
+date: "`r format(Sys.time(), tz='America/New_York', usetz = TRUE)`"
 params:
   island:
     label: "Island:"
-    value: Torgersen
+    value: Biscoe
     input: select
-    choices: [Torgersen, Biscoe, Dream]
+    choices: [Biscoe, Dream, Torgersen]
 output: html_document
 editor_options: 
   chunk_output_type: inline
@@ -15,11 +15,8 @@ editor_options:
 
 ------------------------------------------------------------------------
 
-datetime: `r Sys.time()`
 
-# `r params$island` Island Inspection Report today
-
-Changing text here
+# `r params$island` Island Inspection Report
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
