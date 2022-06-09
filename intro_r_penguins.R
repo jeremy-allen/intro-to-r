@@ -34,7 +34,7 @@ dat <- dat %>%
 # visualize ---------------------------------------------------------------
 
 # bar plot
-dat %>%
+one <- dat %>%
   ggplot(aes(x = Island, fill = Species)) +
   geom_bar() + 
   labs(
@@ -44,7 +44,7 @@ dat %>%
   )
 
 # save plot to disk (filename includes path)
-ggsave("output/species_by_island.png", plot = last_plot())
+ggsave("output/species_by_island.png", plot = one)
 
 # scatter plot, add titles
 length_mass <- dat %>% 
