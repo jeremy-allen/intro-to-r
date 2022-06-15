@@ -1,12 +1,16 @@
 ---
-title: "Knit to Word - A Penguin Story"
+title: "Knit to Word and PDF - A Penguin Story"
+subtitle: "of love and heartbreak"
 author: "Jeremy Allen"
 date: "`r format(Sys.time(), tz='America/New_York', usetz = TRUE)`"
 output:
   pdf_document:
-    toc: true
-    number_sections: true
+    toc: yes
+    number_sections: yes
   word_document: default
+  html_document:
+    toc: yes
+    df_print: paged
 editor_options:
   chunk_output_type: console
 ---
@@ -242,7 +246,9 @@ dat %>%
 
 ## Row groups
 
-instead of repeating the species on each line, let's drop the stub info and in `dplyr` group by species, which `gt` will recognize
+Instead of repeating the species on each line, let's drop the stub info and in `dplyr` group by species, which `gt` will recognize
+
+Now to place our footnote we need to target row groups not spcific cells.
 
 ```{r groups, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
@@ -272,7 +278,8 @@ dat %>%
   ) %>% 
   tab_footnote(
     footnote = "Only found on a single island.",
-    locations = cells_body(columns = species, rows = c(10,13))
+    #locations = cells_body(columns = species, rows = c(10,13)),
+    locations = cells_row_groups(groups = c("Chinstrap", "Gentoo"))
   ) %>%
   cols_label( # new column labels!
     bill_length_mm = html("Bill Length,<br>mm"),
@@ -287,7 +294,10 @@ dat %>%
 ```
 
 ## Easy colors with `gtExtras`
-https://jthomasmock.github.io/gtExtras/
+
+- The goal of gtExtras is to provide some additional helper functions to assist in creating beautiful tables with gt.
+
+- The functions are generally wrappers around boilerplate or adding capabilities that are currently not yet built into gt. 
 
 ```{r extras, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
@@ -317,7 +327,7 @@ pt <- dat %>%
   ) %>% 
   tab_footnote(
     footnote = "Only found on a single island.",
-    locations = cells_body(columns = species, rows = c(10,13))
+    locations = cells_row_groups(groups = c("Chinstrap", "Gentoo"))
   ) %>%
   # trim gives smaller range of colors
   # so the green and purples are not as dark
@@ -336,6 +346,12 @@ pt
 
 ```
 
+```{r word, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+# will this show up if we knit to Word?
+#gt::as_rtf(pt)
+
+```
 
 ```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
@@ -360,7 +376,28 @@ gtsave(pt, "pt_as_image.png", expand = 25, zoom = 6)
 knitr::include_graphics("pt_as_image.png")
 ```
 
-more about the gt package at <https://gt.rstudio.com/index.html>
+## gtExtras also has themes!
+Easily restyle your entire table. Here is the New York Times theme.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+pt %>% 
+  gt_theme_nytimes()
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+pt %>% 
+  gt_theme_538()
+
+```
+
+
+more about the gt package at <https://gt.rstudio.com/index.html>  
+
+more about the gtExtras package at <https://jthomasmock.github.io/gtExtras/>
 
 # References
 
