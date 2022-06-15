@@ -346,6 +346,8 @@ pt
 
 ```
 
+
+
 ```{r word, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 # will this show up if we knit to Word?
