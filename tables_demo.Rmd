@@ -292,7 +292,7 @@ https://jthomasmock.github.io/gtExtras/
 ```{r extras, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 # table using gt package
-dat %>% 
+pt <- dat %>% 
   dplyr::group_by(species) %>% # add a grouping variable and drop stub info
   #gt(rowname_col = "species") %>%
   #tab_stubhead(label = "species") %>%
@@ -332,6 +332,8 @@ dat %>%
     year = "Year"
   )
 
+pt
+
 ```
 
 
@@ -340,8 +342,8 @@ dat %>%
 #gt::as_rtf(pt)
 #gt::as_latex(pt)
 
-# gtsave(pt, "pt_as_pdf.pdf")
-# gtsave(pt, "pt_as_rtf.rtf")
+gtsave(pt, "pt_as_pdf.pdf")
+gtsave(pt, "pt_as_rtf.rtf")
 
 ```
 
