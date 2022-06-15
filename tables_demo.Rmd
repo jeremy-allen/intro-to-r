@@ -91,24 +91,32 @@ length_mass
 
 # Summary Table
 
-We can see that for Adelie, their culmen length is getting longer on Biscoe Island but shorter on Dream Island.
+## A Closer Look at `gt`
 
-```{r table, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+- the interface is high-level and declarative (general instructions versus very specific)
+- the formatting options are ‘batteries included’ (scientific notation, uncertainty, ranges, percentages, suffixes, localized currency, dates/times + much more)
+- there is excellent, pain-free support for footnotes
+- the output is ‘camera-ready’
+- multiple output formats are supported with the same declarative interface
+- the API closely follows tidyverse conventions by adhering to the tidyverse style guide
+- there’s a focus on making the package documentation and examples the best they can be
+- rigorous QA/QC measures: high test coverage for automated tests, and thorough manual testing by QA engineers (with every proposed code change)
+
+```{r table, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
 # make a table of our data
 # but let's summarize by year, so first make a year column
-dat <- dat %>%
-  dplyr::arrange(`Date Egg`) %>% 
-  mutate(Year = year(`Date Egg`),
-         Year = as.factor(Year))
-
-# table using gt package
-pt <- dat %>% 
-  janitor::clean_names() %>% 
+dat <- penguins %>%
+  dplyr::arrange(year) %>% 
+  mutate(year = as.factor(year)) %>% 
   group_by(species, island, year) %>% # order here will influence table output
   summarise(across(culmen_length_mm:body_mass_g, mean)) %>%
   select(species, island, year, everything()) %>% 
-  dplyr::arrange(species, island, year) %>% 
+  dplyr::arrange(species, island, year) 
+
+# table using gt package
+#pt <- 
+  dat %>% 
   gt() %>%
   tab_header(
     title = "Penguin Anatomical Changes",
@@ -119,18 +127,21 @@ pt <- dat %>%
     decimals = 1
   )
 
-# need to install webshot and also run webshot::install_phantomjs()
-gtsave(pt, "pt_as_image.png", expand = 25, zoom = 2)
-
 #gt::as_rtf(pt)
-gt::as_latex(pt)
+#gt::as_latex(pt)
 
 # gtsave(pt, "pt_as_pdf.pdf")
 # gtsave(pt, "pt_as_rtf.rtf")
 
 ```
 
-```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+```{r save_pt, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+# need to install webshot and also run webshot::install_phantomjs()
+gtsave(pt, "pt_as_image.png", expand = 25, zoom = 6)
+
+```
+
+```{r show_table, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
 knitr::include_graphics("pt_as_image.png")
 ```
 
