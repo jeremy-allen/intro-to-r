@@ -96,7 +96,7 @@ length_mass
 -   there's a focus on making the package documentation and examples the best they can be
 -   rigorous QA/QC measures: high test coverage for automated tests, and thorough manual testing by QA engineers (with every proposed code change)
 
-```{r table, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+```{r table, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 # make a table of our data
 # but let's summarize by year, so first make a year column
@@ -136,7 +136,7 @@ fmt_number(
 -   A source note can be added to the table's footer through use of the tab_source_note() function.
 -   Footnotes live inside the Footer part and their footnote marks are attached to cell data. Footnotes are added with the tab_footnote() function.
 
-```{r}
+```{r notes, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 # table using gt package
 dat %>% 
@@ -160,6 +160,125 @@ dat %>%
     locations = cells_body(columns = species, rows = c(10,13))
   )
 
+
+```
+
+Note that in rows = c(10,13) you can use an expression instead of naming rows.
+
+## Stubs
+
+The Stub is the area to the left in a table that contains row labels, and may contain row group labels, and summary labels. Those subparts can be grouped in a sequence of row groups.
+
+```{r stub, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+# table using gt package
+dat %>% 
+  gt(rowname_col = "species") %>% # the Stub!
+  tab_stubhead(label = "species") %>% # and Stbuhead!
+  tab_header(
+    title = md("**Penguin Anatomical Changes**"),
+    subtitle = "By species, island, and year from 2007-2009"
+  ) %>%
+  fmt_number(
+    columns = bill_length_mm:body_mass_g,
+    decimals = 1
+  ) %>% 
+  tab_source_note(
+    source_note = "Source: Very cold nights."
+  ) %>%
+  tab_source_note(
+    source_note = md("Reference: Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica) penguin data. R package version 0.1.0. https://allisonhorst.github.io/palmerpenguins/")
+  ) %>% 
+  tab_footnote(
+    footnote = "Only found on a single island.",
+    locations = cells_body(columns = species, rows = c(10,13))
+  )
+
+```
+
+## Add a tab spanner over some column labels
+
+and change some of the column labels
+
+```{r}
+
+# table using gt package
+dat %>% 
+  gt(rowname_col = "species") %>%
+  tab_stubhead(label = "species") %>%
+  tab_header(
+    title = md("**Penguin Anatomical Changes**"),
+    subtitle = "By species, island, and year from 2007-2009"
+  ) %>%
+  tab_spanner( # tab spanner!
+    label = "Anatomy",
+    columns = c(bill_length_mm:flipper_length_mm)
+  ) %>% 
+  fmt_number(
+    columns = bill_length_mm:body_mass_g,
+    decimals = 1
+  ) %>% 
+  tab_source_note(
+    source_note = "Source: Very cold nights."
+  ) %>%
+  tab_source_note(
+    source_note = md("Reference: Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica) penguin data. R package version 0.1.0. https://allisonhorst.github.io/palmerpenguins/")
+  ) %>% 
+  tab_footnote(
+    footnote = "Only found on a single island.",
+    locations = cells_body(columns = species, rows = c(10,13))
+  ) %>%
+  cols_label( # new column labels!
+    bill_length_mm = html("Bill Length,<br>mm"),
+    bill_depth_mm = html("Bill Depth,<br>mm"),
+    flipper_length_mm = html("Flipper Length,<br>mm"),
+    body_mass_g = html("Body Mass,<br>g"),
+    species = "Species", # but this did not do anything! Remember why?
+    island = "Island",
+    year = "Year"
+  )
+```
+
+## Row groups
+
+```{r}
+
+# table using gt package
+dat %>% 
+  dplyr::group_by(species) %>% # add a grouping variable
+  gt(rowname_col = "species") %>%
+  tab_stubhead(label = "species") %>%
+  tab_header(
+    title = md("**Penguin Anatomical Changes**"),
+    subtitle = "By species, island, and year from 2007-2009"
+  ) %>%
+  tab_spanner( # tab spanner!
+    label = "Anatomy",
+    columns = c(bill_length_mm:flipper_length_mm)
+  ) %>% 
+  fmt_number(
+    columns = bill_length_mm:body_mass_g,
+    decimals = 1
+  ) %>% 
+  tab_source_note(
+    source_note = "Source: Very cold nights."
+  ) %>%
+  tab_source_note(
+    source_note = md("Reference: Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica) penguin data. R package version 0.1.0. https://allisonhorst.github.io/palmerpenguins/")
+  ) %>% 
+  tab_footnote(
+    footnote = "Only found on a single island.",
+    locations = cells_body(columns = species, rows = c(10,13))
+  ) %>%
+  cols_label( # new column labels!
+    bill_length_mm = html("Bill Length,<br>mm"),
+    bill_depth_mm = html("Bill Depth,<br>mm"),
+    flipper_length_mm = html("Flipper Length,<br>mm"),
+    body_mass_g = html("Body Mass,<br>g"),
+    species = "Species", # but this did not do anything! Remember why?
+    island = "Island",
+    year = "Year"
+  )
 
 ```
 
