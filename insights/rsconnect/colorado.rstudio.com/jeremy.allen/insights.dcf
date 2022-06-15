@@ -1,0 +1,13 @@
+name: insights
+title: insights
+username: jeremy.allen
+account: jeremy.allen
+server: colorado.rstudio.com
+hostUrl: https://colorado.rstudio.com/rsc/__api__
+appId: 11565
+bundleId: 57444
+url: https://colorado.rstudio.com/rsc/content/d17b0422-2ee6-4b53-ab2c-9f32b861cd6c/
+when: 1654817454.54148
+lastSyncTime: 1654817454.54149
+asMultiple: FALSE
+asStatic: FALSE
