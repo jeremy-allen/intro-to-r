@@ -110,7 +110,7 @@ dat <- penguins %>%
   dplyr::arrange(year) %>% 
   mutate(year = as.factor(year)) %>% 
   group_by(species, island, year) %>% # order here will influence table output
-  summarise(across(culmen_length_mm:body_mass_g, mean)) %>%
+  summarise(across(bill_length_mm:body_mass_g, ~ mean(., na.rm = TRUE))) %>%
   select(species, island, year, everything()) %>% 
   dplyr::arrange(species, island, year) 
 
@@ -123,7 +123,7 @@ dat <- penguins %>%
     subtitle = "By species, island, and year"
   ) %>%
   fmt_number(
-    columns = culmen_length_mm:body_mass_g,
+    columns = bill_length_mm:body_mass_g,
     decimals = 1
   )
 
