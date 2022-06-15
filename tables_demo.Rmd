@@ -22,6 +22,7 @@ library(tidyverse)
 library(plotly)
 library(palmerpenguins)
 library(gt)
+library(gtExtras)
 library(lubridate)
 
 # read a CSV file that is online or on disk
@@ -200,7 +201,7 @@ dat %>%
 
 and change some of the column labels
 
-```{r}
+```{r labels, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 # table using gt package
 dat %>% 
@@ -241,13 +242,16 @@ dat %>%
 
 ## Row groups
 
-```{r}
+instead of repeating the species on each line, let's drop the stub info and in `dplyr` group by species, which `gt` will recognize
+
+```{r groups, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 
 # table using gt package
 dat %>% 
-  dplyr::group_by(species) %>% # add a grouping variable
-  gt(rowname_col = "species") %>%
-  tab_stubhead(label = "species") %>%
+  dplyr::group_by(species) %>% # add a grouping variable and drop stub info
+  #gt(rowname_col = "species") %>%
+  #tab_stubhead(label = "species") %>%
+  gt() %>% 
   tab_header(
     title = md("**Penguin Anatomical Changes**"),
     subtitle = "By species, island, and year from 2007-2009"
@@ -281,6 +285,55 @@ dat %>%
   )
 
 ```
+
+## Easy colors with `gtExtras`
+https://jthomasmock.github.io/gtExtras/
+
+```{r extras, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+# table using gt package
+dat %>% 
+  dplyr::group_by(species) %>% # add a grouping variable and drop stub info
+  #gt(rowname_col = "species") %>%
+  #tab_stubhead(label = "species") %>%
+  gt() %>% 
+  tab_header(
+    title = md("**Penguin Anatomical Changes**"),
+    subtitle = "By species, island, and year from 2007-2009"
+  ) %>%
+  tab_spanner( # tab spanner!
+    label = "Anatomy",
+    columns = c(bill_length_mm:flipper_length_mm)
+  ) %>% 
+  fmt_number(
+    columns = bill_length_mm:body_mass_g,
+    decimals = 1
+  ) %>% 
+  tab_source_note(
+    source_note = "Source: Very cold nights."
+  ) %>%
+  tab_source_note(
+    source_note = md("Reference: Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica) penguin data. R package version 0.1.0. https://allisonhorst.github.io/palmerpenguins/")
+  ) %>% 
+  tab_footnote(
+    footnote = "Only found on a single island.",
+    locations = cells_body(columns = species, rows = c(10,13))
+  ) %>%
+  # trim gives smaller range of colors
+  # so the green and purples are not as dark
+  gt_hulk_col_numeric(bill_depth_mm, trim = TRUE) %>%  # gtExtras!
+  gt_hulk_col_numeric(body_mass_g, trim = TRUE) %>%  # gtExtras!
+  cols_label( # new column labels!
+    bill_length_mm = html("Bill Length,<br>mm"),
+    bill_depth_mm = html("Bill Depth,<br>mm"),
+    flipper_length_mm = html("Flipper Length,<br>mm"),
+    body_mass_g = html("Body Mass,<br>g"),
+    island = "Island",
+    year = "Year"
+  )
+
+```
+
 
 ```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
