@@ -347,6 +347,9 @@ gtsave(pt, "pt_as_rtf.rtf")
 
 ```
 
+## Table as a graphic
+When knit to PDF, previous tables ran off the right edge, but if save the table as an image in on chunk and use knitr::include_graphics("pt_as_image.png") in another, the image conforms to the default PDF width.
+
 ```{r save_pt, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 # need to install webshot and also run webshot::install_phantomjs()
 gtsave(pt, "pt_as_image.png", expand = 25, zoom = 6)
