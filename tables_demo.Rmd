@@ -15,7 +15,6 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
 ```{r data, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
 # load a package into the session for use
@@ -60,14 +59,10 @@ dat %>%
 
 ```
 
-
-
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='asis'}
 # have a remote analyst write content that you can source into this doc
 cat(read_lines(file = "interpret_islands.txt"))
 ```
-
-
 
 # Understanding Penguin Anatomy
 
@@ -88,19 +83,18 @@ length_mass
 
 ```
 
-
 # Summary Table
 
 ## A Closer Look at `gt`
 
-- the interface is high-level and declarative (general instructions versus very specific)
-- the formatting options are ‘batteries included’ (scientific notation, uncertainty, ranges, percentages, suffixes, localized currency, dates/times + much more)
-- there is excellent, pain-free support for footnotes
-- the output is ‘camera-ready’
-- multiple output formats are supported with the same declarative interface
-- the API closely follows tidyverse conventions by adhering to the tidyverse style guide
-- there’s a focus on making the package documentation and examples the best they can be
-- rigorous QA/QC measures: high test coverage for automated tests, and thorough manual testing by QA engineers (with every proposed code change)
+-   the interface is high-level and declarative (general instructions versus very specific)
+-   the formatting options are 'batteries included' (scientific notation, uncertainty, ranges, percentages, suffixes, localized currency, dates/times + much more)
+-   there is excellent, pain-free support for footnotes
+-   the output is 'camera-ready'
+-   multiple output formats are supported with the same declarative interface
+-   the API closely follows tidyverse conventions by adhering to the tidyverse style guide
+-   there's a focus on making the package documentation and examples the best they can be
+-   rigorous QA/QC measures: high test coverage for automated tests, and thorough manual testing by QA engineers (with every proposed code change)
 
 ```{r table, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
@@ -112,20 +106,64 @@ dat <- penguins %>%
   group_by(species, island, year) %>% # order here will influence table output
   summarise(across(bill_length_mm:body_mass_g, ~ mean(., na.rm = TRUE))) %>%
   select(species, island, year, everything()) %>% 
-  dplyr::arrange(species, island, year) 
+  dplyr::arrange(species, island, year) %>% 
+  ungroup() # experiment with and without
 
 # table using gt package
-#pt <- 
-  dat %>% 
+dat %>% 
+gt() %>%
+tab_header(
+  title = md("**Penguin Anatomical Changes**"),
+  subtitle = "By species, island, and year from 2007-2009"
+) %>%
+fmt_number(
+  columns = bill_length_mm:body_mass_g,
+  decimals = 1
+)
+
+```
+
+## Parts of `gt` table
+
+-   the Table Header (optional; with a title and possibly a subtitle)
+-   the Stub and the Stub Head (optional; contains row labels, optionally within row groups having row group labels and possibly summary labels when a summary is present)
+-   the Column Labels (contains column labels, optionally under spanner column labels)
+-   the Table Body (contains columns and rows of cells)
+-   the Table Footer (optional; possibly with footnotes and source notes)
+
+**Right now we don't have a Stub or footer, so let's add those**
+
+-   A source note can be added to the table's footer through use of the tab_source_note() function.
+-   Footnotes live inside the Footer part and their footnote marks are attached to cell data. Footnotes are added with the tab_footnote() function.
+
+```{r}
+
+# table using gt package
+dat %>% 
   gt() %>%
   tab_header(
-    title = "Penguin Anatomical Changes",
-    subtitle = "By species, island, and year"
+    title = md("**Penguin Anatomical Changes**"),
+    subtitle = "By species, island, and year from 2007-2009"
   ) %>%
   fmt_number(
     columns = bill_length_mm:body_mass_g,
     decimals = 1
+  ) %>% 
+  tab_source_note(
+    source_note = "Source: Very cold nights."
+  ) %>%
+  tab_source_note(
+    source_note = md("Reference: Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica) penguin data. R package version 0.1.0. https://allisonhorst.github.io/palmerpenguins/")
+  ) %>% 
+  tab_footnote(
+    footnote = "Only found on a single island.",
+    locations = cells_body(columns = species, rows = c(10,13))
   )
+
+
+```
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 
 #gt::as_rtf(pt)
 #gt::as_latex(pt)
@@ -145,10 +183,7 @@ gtsave(pt, "pt_as_image.png", expand = 25, zoom = 6)
 knitr::include_graphics("pt_as_image.png")
 ```
 
-
-more about the gt package at https://gt.rstudio.com/index.html
-
-
+more about the gt package at <https://gt.rstudio.com/index.html>
 
 # References
 
@@ -163,4 +198,3 @@ gt::as_latex(pt) %>%
   cat()
 
 ```
-
