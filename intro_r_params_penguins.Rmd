@@ -1,6 +1,5 @@
 ---
 title: "Intro to R: Penguins - Tell Me About the Islands"
-author: "Jeremy Allen"
 date: "`r format(Sys.time(), tz='America/New_York', usetz = TRUE)`"
 params:
   island:
@@ -19,7 +18,7 @@ editor_options:
 # `r params$island` Island Inspection Report
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+#knitr::opts_chunk$set(echo = TRUE)
 ```
 
 <br> <br>
@@ -47,8 +46,6 @@ dat <- dat %>%
 # filter out rows with no sex
 dat <- dat %>% 
   filter(!is.na(Sex))
-
-# str(knitr::opts_chunk$get())
 
 ```
 
@@ -114,7 +111,7 @@ dat %>%
   dplyr::arrange(species, island, year) %>% 
   gt() %>%
   tab_header(
-    title = "Penguin Anatomical Changes",
+    title = md("**Penguin Anatomical Changes**"),
     subtitle = "By species, island, and year"
   ) %>%
   fmt_number(

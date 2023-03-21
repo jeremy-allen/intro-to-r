@@ -1,19 +1,12 @@
 ---
 title: 'Intro to R: Penguins - How Do they Work?'
-author: "Jeremy Allen"
 date: "`r format(Sys.time(), tz='America/New_York', usetz = TRUE)`"
 output:
-  word_document: default
   html_document: default
 always_allow_html: true
 editor_options:
   chunk_output_type: console
 ---
-
-```{r setup, include=FALSE}
-# always_allow_html: true is set in the YAML so that I can ouput to Word without error even though I have HTML components
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 <br> <br>
 

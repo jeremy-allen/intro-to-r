@@ -1,7 +1,6 @@
 ---
 title: "Knit to Word and PDF - A Penguin Story"
 subtitle: "of love and heartbreak"
-author: "Jeremy Allen"
 date: "`r format(Sys.time(), tz='America/New_York', usetz = TRUE)`"
 output:
   pdf_document:
@@ -244,6 +243,52 @@ dat %>%
   )
 ```
 
+## Woah, that went off the right side of the PDF. Can we reign that in some?
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+# table using gt package
+dat %>% 
+  gt(rowname_col = "species") %>%
+  tab_stubhead(label = "species") %>%
+  tab_header(
+    title = md("**Penguin Anatomical Changes**"),
+    subtitle = "By species, island, and year from 2007-2009"
+  ) %>%
+  tab_spanner( # tab spanner!
+    label = "Anatomy",
+    columns = c(bill_length_mm:flipper_length_mm)
+  ) %>% 
+  fmt_number(
+    columns = bill_length_mm:body_mass_g,
+    decimals = 1
+  ) %>% 
+  tab_source_note(
+    source_note = "Source: Very cold nights."
+  ) %>%
+  tab_source_note(
+    source_note = md("Reference: Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica) penguin data. R package version 0.1.0. https://allisonhorst.github.io/palmerpenguins/")
+  ) %>% 
+  tab_footnote(
+    footnote = "Only found on a single island.",
+    locations = cells_body(columns = species, rows = c(10,13))
+  ) %>%
+  cols_label( # new column labels!
+    bill_length_mm = html("Bill Length,<br>mm"),
+    bill_depth_mm = html("Bill Depth,<br>mm"),
+    flipper_length_mm = html("Flipper Length,<br>mm"),
+    body_mass_g = html("Body Mass,<br>g"),
+    species = "Species", # but this did not do anything! Remember why?
+    island = "Island",
+    year = "Year"
+  ) %>% 
+  tab_options(
+    table.width = pct(75) # does NOT work when kniting to PDF
+  )
+
+```
+
+
 ## Row groups
 
 Instead of repeating the species on each line, let's drop the stub info and in `dplyr` group by species, which `gt` will recognize
@@ -345,7 +390,6 @@ pt <- dat %>%
 pt
 
 ```
-
 
 
 ```{r word, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
