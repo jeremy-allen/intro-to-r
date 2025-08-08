@@ -1,16 +1,19 @@
 ---
-title: 'Intro to R: Penguins - How Do they Work?'
+title: "Intro to R: Penguins - How Do they Work?"
 date: "`r format(Sys.time(), tz='America/New_York', usetz = TRUE)`"
-output:
-  html_document: default
-always_allow_html: true
-editor_options:
+format: html
+editor:
   chunk_output_type: console
 ---
 
 <br> <br>
 
-```{r data, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+```{r}
+#| label: data
+#| message: false
+#| warning: false
+#| include: false
+#| paged.print: false
 
 # load a package into the session for use
 library(tidyverse)
@@ -24,14 +27,19 @@ dat <- readr::read_csv('penguins_raw.csv')
 
 ```
 
-```{r cleaning, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+```{r}
+#| label: cleaning
+#| message: false
+#| warning: false
+#| include: false
+#| paged.print: false
 
 # drop a column that has no values
-dat <- dat %>% 
+dat <- dat %>%
   select(-Comments)
 
 # filter out rows with no sex
-dat <- dat %>% 
+dat <- dat %>%
   filter(!is.na(Sex))
 
 # str(knitr::opts_chunk$get())
@@ -40,12 +48,18 @@ dat <- dat %>%
 
 # Species by Island
 
-```{r bar, echo=FALSE, fig.width=12, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r}
+#| label: bar
+#| echo: false
+#| fig-width: 12
+#| message: false
+#| warning: false
+#| paged.print: false
 
 # bar plot
 dat %>%
   ggplot(aes(x = Island, fill = Species)) +
-  geom_bar() + 
+  geom_bar() +
   labs(
     title = "Where Do They Live?",
     subtitle = "by Island",
@@ -56,7 +70,12 @@ dat %>%
 
 <br>
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE, results='asis'}
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| paged.print: false
+#| results: asis
 # have a remote analyst write content that you can source into this doc
 cat(read_lines(file = "interpret_islands.txt"))
 ```
@@ -65,7 +84,13 @@ cat(read_lines(file = "interpret_islands.txt"))
 
 # Understanding Penguin Anatomy
 
-```{r scatter, echo=FALSE, fig.width=10, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r}
+#| label: scatter
+#| echo: false
+#| fig-width: 10
+#| message: false
+#| warning: false
+#| paged.print: false
 
 # scatter plot, add titles
 length_mass <- dat %>% 
@@ -90,7 +115,13 @@ plotly::ggplotly(length_mass)
 
 We can see that for Adelie, their culmen length is getting longer on Biscoe Island but shorter on Dream Island.
 
-```{r table, echo=FALSE, fig.width=10, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r}
+#| label: table
+#| echo: false
+#| fig-width: 10
+#| message: false
+#| warning: false
+#| paged.print: false
 
 # make a table of our data
 # but let's summarize by year, so first make a year column
